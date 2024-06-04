@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal</title>
+    <style>
+        body{
+            display: flex;
+            justify-content:center;
+            padding:10px;
+        }
+        .container{
+            width:350px;
+            position:relative;
+        }
+        #play-button {
+            position: fixed;
+            bottom: 30px;
+            right: 50%;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transform: translateX(50%);
+        }
+        #propose-div {
+            display: flex;
+            justify-content: space-between;
+            width: 496px;
+            margin-top: -45px;
+            position: relative;
+        }
+        #little-boy, #little-girl {
+            height: 100px;
+            position: absolute;
+            transition: left 48s ease, right 48s ease;
+        }
+        #little-boy {
+            left: 5px;
+        }
+        #little-girl {
+            right: 5px;
+        }
+        .center-images #little-boy {
+            left: 46%;
+            transform: translateX(-50%);
+        }
+        .center-images #little-girl {
+            right: 46%;
+            transform: translateX(50%);
+        }
+        #sweet-names-carousel {
+            margin-top:-30px;
+            width: 498px;
+            overflow: hidden;
+            white-space: nowrap;
+            }
+
+            #sweet-names {   
+            display: inline-block;
+            animation: scrollNames 48s linear;
+            }
+
+            @keyframes scrollNames {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-100% + 350px));
+            }
+        }
+        .heart{color:red;}
+        .confetti {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: randomColor();
+            animation: fall 2s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <audio id="background-music" src="d:\Birthday\docs\music\Kadhale Kadhale (mp3cut.net).mp3" loop></audio>
+        <img src="d:\Birthday\docs\images\WiSH YOU HAPPY BIRTH DAY DEAR (1).png" alt="">
+        <div id="propose-div">
+            <img id="little-boy" src="d:\Birthday\docs\images\smg-boy-removebg-preview (1).png" alt="">
+            <img id="little-girl" src="d:\Birthday\docs\images\little-girl-removebg-preview (1).png" alt="">
+        </div>
+        <div id="sweet-names-carousel">
+            <div id="sweet-names"></div>
+          </div>
+        <button id="play-button">Play Music</button>
+        <div class="confetti" id="confetti-container"></div>
+    <canvas id="scratch-area" width="300" height="200"></canvas>
+    </div>   
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var proposeDiv = document.getElementById('propose-div');
+            var playButton = document.getElementById('play-button');
+            var sweetNamesDiv = document.getElementById('sweet-names');
+            var carousel = document.getElementById('sweet-names-carousel');
+            proposeDiv.style.display = 'none';
+            var konjals = ['Chellam', 'Pattu', 'Thangam', 'Vairam', 'Bujji', 'Kutty','Bubblu', 'kanne', 'Kanmaniye', 'Anbe', 'Devathaiye', 
+                            'Baby', 'Darling', 'My Sweat Heart', 'My Angel', 'My Queen', 'My Soulmate', 
+                            'My Love','My Everything', 'Miss You So Much di Papa ', 'Wish You Many More Happy Returns of the Day' 
+                        ]
+            playButton.addEventListener('click', function() {
+                // Show the propose-div
+
+                sweetNamesDiv.innerHTML = konjals.map(name => `<span style="padding:0 10px;"><span class="heart">&#10084;</span> ${name}</span>`).join('');
+                proposeDiv.style.display = 'flex';
+                // Add the class to move images to the center
+                setTimeout(function() {
+                    proposeDiv.classList.add('center-images');
+                }, 0);
+                // Play the background music
+                var audio = document.getElementById('background-music');
+                audio.muted = false;
+                audio.play().then(function() {
+                    setTimeout(function() {
+                        console.log('Stopping audio playback');
+                        carousel.style.display = 'none';                       
+                        audio.pause();
+                    }, 61000);
+                    console.log('Audio playback started successfully');
+                }).catch(function(error) {
+                    console.log('Audio playback failed:', error);
+                });
+                setTimeout(function() {
+                    showConfetti();
+        showScratchCard();
+                }, 45000)               
+                playButton.style.display = 'none';
+            });
+         const canvas = document.getElementById('scratch-area');
+const ctx = canvas.getContext('2d');
+const confettiContainer = document.getElementById('confetti-container');
+function drawCard() {
+    ctx.fillStyle = 'gray';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '30px Arial';
+    ctx.fillStyle = 'black';
+    ctx.fillText('Scratch here!', 50, 150);
+}
+function createConfettiPiece() {
+    const confettiPiece = document.createElement('div');
+    confettiPiece.classList.add('confetti-piece');
+    confettiPiece.style.left = Math.random() * 100 + 'vw';
+    confettiPiece.style.backgroundColor = randomColor();
+    confettiContainer.appendChild(confettiPiece); 
+    setTimeout(() => {
+        confettiPiece.remove();
+    }, 2000); // Remove confetti piece after animation ends
+}
+function randomColor() {
+    const colors = ['#ff0', '#f00', '#0f0', '#00f', '#f0f', '#0ff'];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+function showConfetti() {
+    for (let i = 0; i < 150; i++) {
+        createConfettiPiece();
+    }
+}
+function showScratchCard() {
+    drawCard();
+    canvas.style.display = 'block';
+}
+
+function drawResultMessage(message) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'black';
+    ctx.fillText(message, 20, 150);
+}
+
+let isScratching = false;
+
+function scratch(e) {
+    if (isScratching) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        ctx.clearRect(x - 10, y - 10, 20, 20);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        let count = 0;
+        for (let i = 0; i < pixels.length; i += 4) {
+            if (pixels[i] === 0) count++;
+        }
+        const percentage = (count / (canvas.width * canvas.height / 4)) * 100;
+        if (percentage > 150) {
+            drawResultMessage('Happy Birthday <span class="heart">&#10084;</span> We will Marry Soon ');
+            canvas.removeEventListener('mousemove', scratch);
+            canvas.removeEventListener('mousedown', startScratch);
+            canvas.removeEventListener('mouseup', stopScratch);
+        }
+    }
+}
+function startScratch() {
+    isScratching = true;
+}
+function stopScratch() {
+    isScratching = false;
+}
+canvas.addEventListener('mousemove', scratch);
+canvas.addEventListener('mousedown', startScratch);
+canvas.addEventListener('mouseup', stopScratch);
+            
+        });
+    </script>
+</body>
+</html>
